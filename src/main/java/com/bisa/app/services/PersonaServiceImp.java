@@ -16,12 +16,13 @@ public record PersonaServiceImp(PersonaRepository personaRepository) implements 
 
   @Override
   public Persona getPersona(UUID uuid) {
-    return null;
+    return personaRepository.findById(uuid)
+        .orElseThrow(() -> new RuntimeException("The person %s doesn't exist.".formatted(uuid)));
   }
 
   @Override
   public Persona createPersona(Persona persona) {
-    return null;
+    return personaRepository.save(persona);
   }
 
 }

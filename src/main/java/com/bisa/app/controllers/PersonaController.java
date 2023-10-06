@@ -4,11 +4,10 @@ import com.bisa.app.models.Persona;
 import com.bisa.app.services.PersonaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,5 +19,15 @@ public class PersonaController {
   @GetMapping
   public ResponseEntity<List<Persona>> all() {
     return ResponseEntity.ok(personaService.getAllPersonas());
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<Persona> get(@PathVariable(name = "id")UUID id) {
+    return ResponseEntity.ok(personaService.getPersona(id));
+  }
+
+  @PostMapping
+  public ResponseEntity<Persona> create(@RequestBody Persona persona) {
+    return ResponseEntity.ok(personaService.createPersona(persona));
   }
 }

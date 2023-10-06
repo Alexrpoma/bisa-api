@@ -23,6 +23,5 @@ public class Direccion {
   private String zona;
   private String barrio;
   private String calle;
-  private int numeroDomicilio;
-  private String referencia;
+  private int numeroDeDomicilio;
 }

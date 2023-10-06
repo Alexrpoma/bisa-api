@@ -3,7 +3,7 @@ package com.bisa.app.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static jakarta.persistence.GenerationType.AUTO;
@@ -21,8 +21,9 @@ public class Persona {
   private String nombre;
   private String apellidoPaterno;
   private String apellidoMaterno;
-  private LocalDateTime fechaNacimiento;
-  @OneToOne
-  @JoinColumn(name = "id_direccion", referencedColumnName = "id")
+  private LocalDate fechaDeNacimiento;
+  @OneToOne(cascade = {CascadeType.ALL})
+  @JoinColumn(name = "direccion_id", referencedColumnName = "id")
   private Direccion direccion;
+  private int carnetDeIdentidad;
 }
