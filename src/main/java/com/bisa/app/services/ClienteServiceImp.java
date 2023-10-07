@@ -56,36 +56,9 @@ public record ClienteServiceImp(
   public Cliente updateReferenciasPersonales(UUID clienteId, UpdateReferenciaPersonal updateReferenciaPersonal) {
     Cliente cliente = getClient(clienteId);
     UUID referenciaId = updateReferenciaPersonal.referenciaId();
-    boolean existsRefereciaId = false;
     validateReferenciaId(clienteId, referenciaId, cliente);
     validateIfReferenciaNotDuplicated(cliente, referenciaId);
-    boolean existsReferenciaCliente = clienteRepository.existsById(referenciaId);
-    if (existsReferenciaCliente) {
-      cliente.getReferenciasPersonales().getListReferenciaCliente().add(referenciaId);
-      cliente.getReferenciasPersonales().setReferenciasClientes(
-          cliente.getReferenciasPersonales().getListReferenciaCliente().size()
-      );
-      cliente.getReferenciasPersonales().setTotalReferencias(
-          cliente.getReferenciasPersonales().getListReferenciaCliente().size() +
-              cliente.getReferenciasPersonales().getListReferenciaPersona().size()
-      );
-      existsRefereciaId = true;
-    }
-    boolean existsReferenciaPersona = personaRepository.existsById(referenciaId);
-    if (existsReferenciaPersona) {
-      cliente.getReferenciasPersonales().getListReferenciaPersona().add(referenciaId);
-      cliente.getReferenciasPersonales().setTotalReferencias(
-          cliente.getReferenciasPersonales().getListReferenciaCliente().size() +
-              cliente.getReferenciasPersonales().getListReferenciaPersona().size()
-      );
-      existsRefereciaId = true;
-    }
-    if (!existsRefereciaId) {
-      throw new NotFoundException("The reference %s doesn't exist.".formatted(referenciaId));
-    }
-
-    cliente.setEstado(Estado.ACTIVO);
-
+    addReferencia(referenciaId, cliente);
     updateClienteAccessibility(cliente);
     return clienteRepository.save(cliente);
   }
@@ -94,9 +67,15 @@ public record ClienteServiceImp(
   public void deleteReferenciaPersonal(UUID clienteId, UpdateReferenciaPersonal updateReferenciaPersonal) {
     UUID referenciaId = updateReferenciaPersonal.referenciaId();
     Cliente cliente = getClient(clienteId);
-    boolean existsRefereciaId = false;
     validateReferenciaId(clienteId, referenciaId, cliente);
     validateIfReferenciaExists(cliente, referenciaId);
+    deleteReferencia(referenciaId, cliente);
+    updateClienteAccessibility(cliente);
+    clienteRepository.save(cliente);
+  }
+
+  private void deleteReferencia(UUID referenciaId, Cliente cliente) {
+    boolean existsRefereciaId = false;
     boolean existsReferenciaCliente = clienteRepository.existsById(referenciaId);
     if (existsReferenciaCliente) {
       cliente.getReferenciasPersonales().getListReferenciaCliente().remove(referenciaId);
@@ -120,9 +99,35 @@ public record ClienteServiceImp(
     if (!existsRefereciaId) {
       throw new NotFoundException("The reference %s doesn't exist.".formatted(referenciaId));
     }
+  }
 
-    updateClienteAccessibility(cliente);
-    clienteRepository.save(cliente);
+  private void addReferencia(UUID referenciaId, Cliente cliente) {
+    boolean existsReferenciaCliente = clienteRepository.existsById(referenciaId);
+    boolean existsRefereciaId = false;
+    if (existsReferenciaCliente) {
+      cliente.getReferenciasPersonales().getListReferenciaCliente().add(referenciaId);
+      cliente.getReferenciasPersonales().setReferenciasClientes(
+          cliente.getReferenciasPersonales().getListReferenciaCliente().size()
+      );
+      cliente.getReferenciasPersonales().setTotalReferencias(
+          cliente.getReferenciasPersonales().getListReferenciaCliente().size() +
+              cliente.getReferenciasPersonales().getListReferenciaPersona().size()
+      );
+      existsRefereciaId = true;
+    }
+    boolean existsReferenciaPersona = personaRepository.existsById(referenciaId);
+    if (existsReferenciaPersona) {
+      cliente.getReferenciasPersonales().getListReferenciaPersona().add(referenciaId);
+      cliente.getReferenciasPersonales().setTotalReferencias(
+          cliente.getReferenciasPersonales().getListReferenciaCliente().size() +
+              cliente.getReferenciasPersonales().getListReferenciaPersona().size()
+      );
+      existsRefereciaId = true;
+    }
+    if (!existsRefereciaId) {
+      throw new NotFoundException("The reference %s doesn't exist.".formatted(referenciaId));
+    }
+    cliente.setEstado(Estado.ACTIVO);
   }
 
   private static void updateClienteAccessibility(Cliente cliente) {
