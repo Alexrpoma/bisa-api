@@ -37,8 +37,7 @@ public record ClienteServiceImp(
 
   @Override
   public Cliente getCliente(UUID uuid) {
-    return clienteRepository.findById(uuid)
-        .orElseThrow(() -> new NotFoundException("The Client %s doesn't exist.".formatted(uuid)));
+    return getClient(uuid);
   }
 
   @Override
@@ -47,14 +46,7 @@ public record ClienteServiceImp(
       throw new DuplicateResourceException("The email %s is taken!.".formatted(cliente.getEmail()));
     }
     ClienteAgeValidator.validate(cliente);
-    cliente.setReferenciasPersonales(
-        ReferenciasPersonales.builder()
-            .listReferenciaCliente(new HashSet<>())
-            .listReferenciaPersona(new HashSet<>())
-            .totalReferencias(0)
-            .referenciasClientes(0)
-            .build()
-    );
+    initializeClienteReferences(cliente);
     cliente.setEstado(Estado.BLOQUEADO);
     cliente.setAccesibilidad(Accesibilidad.NULA);
     return clienteCreatoDTOMapper.apply(clienteRepository.save(cliente));
@@ -62,18 +54,10 @@ public record ClienteServiceImp(
 
   @Override
   public Cliente updateReferenciasPersonales(UUID clienteId, UpdateReferenciaPersonal updateReferenciaPersonal) {
+    Cliente cliente = getClient(clienteId);
     UUID referenciaId = updateReferenciaPersonal.referenciaId();
     boolean existsRefereciaId = false;
-    if (clienteId.equals(referenciaId)) {
-      throw new DuplicateResourceException("The Client %s can't be a reference of himself.".formatted(clienteId));
-    }
-    Cliente cliente = clienteRepository.findById(clienteId)
-        .orElseThrow(
-            () -> new NotFoundException("The Client %s doesn't exist.".formatted(clienteId))
-        );
-    if (cliente.getInformacionPersonal().getId().equals(referenciaId)) {
-      throw new DuplicateResourceException("The Client %s can't be a reference of himself.".formatted(clienteId));
-    }
+    validateReferenciaId(clienteId, referenciaId, cliente);
     if (cliente.getReferenciasPersonales().getListReferenciaCliente().contains(referenciaId)
         || cliente.getReferenciasPersonales().getListReferenciaPersona().contains(referenciaId)) {
       throw new DuplicateResourceException("The reference %s already exists.".formatted(referenciaId));
@@ -126,19 +110,15 @@ public record ClienteServiceImp(
   @Override
   public void deleteReferenciaPersonal(UUID clienteId, UpdateReferenciaPersonal updateReferenciaPersonal) {
     UUID referenciaId = updateReferenciaPersonal.referenciaId();
+    Cliente cliente = getClient(clienteId);
     boolean existsRefereciaId = false;
-    if (clienteId.equals(referenciaId)) {
-      throw new DuplicateResourceException("The Client %s can't be a reference of himself.".formatted(clienteId));
-    }
-    Cliente cliente = clienteRepository.findById(clienteId)
-        .orElseThrow(
-            () -> new NotFoundException("The Client %s doesn't exist.".formatted(clienteId))
-        );
-    if (cliente.getInformacionPersonal().getId().equals(referenciaId)) {
-      throw new DuplicateResourceException("The Client %s can't be a reference of himself.".formatted(clienteId));
+    validateReferenciaId(clienteId, referenciaId, cliente);
+    if (!cliente.getReferenciasPersonales().getListReferenciaCliente().contains(referenciaId)
+        || !cliente.getReferenciasPersonales().getListReferenciaPersona().contains(referenciaId)) {
+      throw new DuplicateResourceException("The reference %s doesn't exist.".formatted(referenciaId));
     }
     boolean existsReferenciaCliente = clienteRepository.existsById(referenciaId);
-    if (existsReferenciaCliente && cliente.getReferenciasPersonales().getListReferenciaCliente().contains(referenciaId)) {
+    if (existsReferenciaCliente) {
       cliente.getReferenciasPersonales().getListReferenciaCliente().remove(referenciaId);
       cliente.getReferenciasPersonales().setReferenciasClientes(
           cliente.getReferenciasPersonales().getListReferenciaCliente().size()
@@ -149,7 +129,7 @@ public record ClienteServiceImp(
       existsRefereciaId = true;
     }
     boolean existsReferenciaPersona = personaRepository.existsById(referenciaId);
-    if (existsReferenciaPersona && cliente.getReferenciasPersonales().getListReferenciaPersona().contains(referenciaId)) {
+    if (existsReferenciaPersona) {
       cliente.getReferenciasPersonales().getListReferenciaPersona().remove(referenciaId);
       cliente.getReferenciasPersonales().setTotalReferencias(
           cliente.getReferenciasPersonales().getTotalReferencias() - 1
@@ -180,5 +160,32 @@ public record ClienteServiceImp(
       cliente.setEstado(Estado.BLOQUEADO);
     }
     clienteRepository.save(cliente);
+  }
+
+  private static void initializeClienteReferences(Cliente cliente) {
+    cliente.setReferenciasPersonales(
+        ReferenciasPersonales.builder()
+            .listReferenciaCliente(new HashSet<>())
+            .listReferenciaPersona(new HashSet<>())
+            .totalReferencias(0)
+            .referenciasClientes(0)
+            .build()
+    );
+  }
+
+  private Cliente getClient(UUID clienteId) {
+    return clienteRepository.findById(clienteId)
+        .orElseThrow(
+            () -> new NotFoundException("The Client %s doesn't exist.".formatted(clienteId))
+        );
+  }
+
+  private static void validateReferenciaId(UUID clienteId, UUID referenciaId, Cliente cliente) {
+    if (clienteId.equals(referenciaId)) {
+      throw new DuplicateResourceException("The Client %s can't be a reference of himself.".formatted(clienteId));
+    }
+    if (cliente.getInformacionPersonal().getId().equals(referenciaId)) {
+      throw new DuplicateResourceException("The Client %s can't be a reference of himself.".formatted(clienteId));
+    }
   }
 }
