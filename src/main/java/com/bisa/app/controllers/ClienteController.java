@@ -5,13 +5,13 @@ import com.bisa.app.dtos.ClientesAccesibilidadDTO;
 import com.bisa.app.models.Cliente;
 import com.bisa.app.models.UpdateReferenciaPersonal;
 import com.bisa.app.services.ClienteService;
+import com.bisa.app.validators.IdValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +19,7 @@ import java.util.UUID;
 public class ClienteController {
 
   private final ClienteService clienteService;
+  private final IdValidator idValidator;
 
   @GetMapping
   public ResponseEntity<List<ClientesAccesibilidadDTO>> allClientesAccesibilidad() {
@@ -31,8 +32,8 @@ public class ClienteController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Cliente> getCliente(@PathVariable(name = "id") UUID id) {
-    return ResponseEntity.ok(clienteService.getCliente(id));
+  public ResponseEntity<Cliente> getCliente(@PathVariable(name = "id") String  id) {
+    return ResponseEntity.ok(clienteService.getCliente(idValidator.apply(id)));
   }
 
   @PostMapping
@@ -43,18 +44,19 @@ public class ClienteController {
 
   @PutMapping("/{clienteId}/referencia")
   public ResponseEntity<Cliente> updateReferenciasPersonales(
-      @PathVariable(name = "clienteId") UUID clienteId,
+      @PathVariable(name = "clienteId") String clienteId,
       @RequestBody UpdateReferenciaPersonal updateReferenciaPersonal
       ) {
-    return ResponseEntity.ok(clienteService.updateReferenciasPersonales(clienteId, updateReferenciaPersonal));
+    return ResponseEntity.ok(clienteService
+        .updateReferenciasPersonales(idValidator.apply(clienteId), updateReferenciaPersonal));
   }
 
   @DeleteMapping("/{clienteId}/referencia")
   public ResponseEntity<Void> deleteReferenciaPersonal(
-      @PathVariable(name = "clienteId") UUID clienteId,
+      @PathVariable(name = "clienteId") String clienteId,
       @RequestBody UpdateReferenciaPersonal updateReferenciaPersonal
       ) {
-    clienteService.deleteReferenciaPersonal(clienteId, updateReferenciaPersonal);
+    clienteService.deleteReferenciaPersonal(idValidator.apply(clienteId), updateReferenciaPersonal);
     return ResponseEntity.noContent().build();
   }
 }

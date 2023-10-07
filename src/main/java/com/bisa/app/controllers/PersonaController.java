@@ -2,13 +2,13 @@ package com.bisa.app.controllers;
 
 import com.bisa.app.models.Persona;
 import com.bisa.app.services.PersonaService;
+import com.bisa.app.validators.IdValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +16,7 @@ import java.util.UUID;
 public class PersonaController {
 
   private final PersonaService personaService;
+  private final IdValidator idValidator;
 
   @GetMapping
   public ResponseEntity<List<Persona>> all() {
@@ -23,8 +24,8 @@ public class PersonaController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Persona> get(@PathVariable(name = "id")UUID id) {
-    return ResponseEntity.ok(personaService.getPersona(id));
+  public ResponseEntity<Persona> get(@PathVariable(name = "id") String id) {
+    return ResponseEntity.ok(personaService.getPersona(idValidator.apply(id)));
   }
 
   @PostMapping
