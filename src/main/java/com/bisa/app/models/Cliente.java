@@ -15,9 +15,9 @@ public class Cliente {
   @Id
   @GeneratedValue(strategy = AUTO)
   private UUID id;
-  @OneToOne
-  @JoinColumn(name = "id_persona", referencedColumnName = "id")
-  private Persona personalInfo;
+  @OneToOne(cascade = {CascadeType.ALL})
+  @JoinColumn(name = "persona_id", referencedColumnName = "id")
+  private Persona informacionPersonal;
   @Column(unique = true)
   private String email;
   private String telefono;

@@ -3,6 +3,7 @@ package com.bisa.app.controllers;
 import com.bisa.app.models.Persona;
 import com.bisa.app.services.PersonaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class PersonaController {
 
   @PostMapping
   public ResponseEntity<Persona> create(@RequestBody Persona persona) {
-    return ResponseEntity.ok(personaService.createPersona(persona));
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(personaService.createPersona(persona));
   }
 }
