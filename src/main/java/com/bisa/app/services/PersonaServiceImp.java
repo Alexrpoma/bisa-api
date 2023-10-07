@@ -1,5 +1,6 @@
 package com.bisa.app.services;
 
+import com.bisa.app.exceptions.NotFoundException;
 import com.bisa.app.models.Persona;
 import com.bisa.app.repositories.PersonaRepository;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public record PersonaServiceImp(PersonaRepository personaRepository) implements 
   @Override
   public Persona getPersona(UUID uuid) {
     return personaRepository.findById(uuid)
-        .orElseThrow(() -> new RuntimeException("The person %s doesn't exist.".formatted(uuid)));
+        .orElseThrow(() -> new NotFoundException("The person %s doesn't exist.".formatted(uuid)));
   }
 
   @Override

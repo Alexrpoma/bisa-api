@@ -1,5 +1,7 @@
 package com.bisa.app.services;
 
+import com.bisa.app.exceptions.DuplicateResourceException;
+import com.bisa.app.exceptions.NotFoundException;
 import com.bisa.app.models.Cliente;
 import com.bisa.app.models.Estado;
 import com.bisa.app.repositories.ClienteRepository;
@@ -18,13 +20,13 @@ public record ClienteServiceImp(ClienteRepository clienteRepository) implements 
   @Override
   public Cliente getCliente(UUID uuid) {
     return clienteRepository.findById(uuid)
-        .orElseThrow(() -> new RuntimeException("The Client %s doesn't exist.".formatted(uuid)));
+        .orElseThrow(() -> new NotFoundException("The Client %s doesn't exist.".formatted(uuid)));
   }
 
   @Override
   public Cliente createCliente(Cliente cliente) {
     if(clienteRepository.existsClienteByEmail(cliente.getEmail())) {
-      throw new RuntimeException("The email %s is taken!.".formatted(cliente.getEmail()));
+      throw new DuplicateResourceException("The email %s is taken!.".formatted(cliente.getEmail()));
     }
     cliente.setEstado(Estado.BLOQUEADO);
     return clienteRepository.save(cliente);
