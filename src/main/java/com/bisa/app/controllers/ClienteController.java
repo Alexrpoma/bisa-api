@@ -1,5 +1,6 @@
 package com.bisa.app.controllers;
 
+import com.bisa.app.dtos.ClientesAccesibilidadDTO;
 import com.bisa.app.models.Cliente;
 import com.bisa.app.models.UpdateReferenciaPersonal;
 import com.bisa.app.services.ClienteService;
@@ -19,7 +20,12 @@ public class ClienteController {
   private final ClienteService clienteService;
 
   @GetMapping
-  public ResponseEntity<List<Cliente>> all() {
+  public ResponseEntity<List<ClientesAccesibilidadDTO>> allClientesAccesibilidad() {
+    return ResponseEntity.ok(clienteService.allClientesAccesibilidad());
+  }
+
+  @GetMapping("/detalle")
+  public ResponseEntity<List<Cliente>> allDetalleClientes() {
     return ResponseEntity.ok(clienteService.allClientes());
   }
 

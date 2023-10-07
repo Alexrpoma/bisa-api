@@ -1,5 +1,7 @@
 package com.bisa.app.services;
 
+import com.bisa.app.dtos.ClientesAccesibilidadDTO;
+import com.bisa.app.dtos.ClientesAccesibilidadDTOMapper;
 import com.bisa.app.exceptions.DuplicateResourceException;
 import com.bisa.app.exceptions.NotFoundException;
 import com.bisa.app.models.*;
@@ -15,11 +17,19 @@ import java.util.UUID;
 @Service
 public record ClienteServiceImp(
     ClienteRepository clienteRepository,
-    PersonaRepository personaRepository
+    PersonaRepository personaRepository,
+    ClientesAccesibilidadDTOMapper clientesAccesibilidadDTOMapper
 ) implements ClienteService{
   @Override
   public List<Cliente> allClientes() {
     return clienteRepository.findAll();
+  }
+
+  @Override
+  public List<ClientesAccesibilidadDTO> allClientesAccesibilidad() {
+    return clienteRepository.findAll().stream()
+        .map(clientesAccesibilidadDTOMapper)
+        .toList();
   }
 
   @Override
