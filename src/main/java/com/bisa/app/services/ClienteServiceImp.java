@@ -5,6 +5,7 @@ import com.bisa.app.exceptions.NotFoundException;
 import com.bisa.app.models.Cliente;
 import com.bisa.app.models.Estado;
 import com.bisa.app.repositories.ClienteRepository;
+import com.bisa.app.validators.ClienteAgeValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public record ClienteServiceImp(ClienteRepository clienteRepository) implements 
     if(clienteRepository.existsClienteByEmail(cliente.getEmail())) {
       throw new DuplicateResourceException("The email %s is taken!.".formatted(cliente.getEmail()));
     }
+    ClienteAgeValidator.validate(cliente);
     cliente.setEstado(Estado.BLOQUEADO);
     return clienteRepository.save(cliente);
   }
