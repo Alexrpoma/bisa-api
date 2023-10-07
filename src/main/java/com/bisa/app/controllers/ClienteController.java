@@ -1,6 +1,7 @@
 package com.bisa.app.controllers;
 
 import com.bisa.app.models.Cliente;
+import com.bisa.app.models.UpdateReferenciaPersonal;
 import com.bisa.app.services.ClienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,12 +34,12 @@ public class ClienteController {
         .body(clienteService.createCliente(cliente));
   }
 
-  @PutMapping("/{clienteId}/referencia/{referenciaId}")
+  @PutMapping("/{clienteId}/referencia")
   public ResponseEntity<Cliente> updateReferenciasPersonales(
       @PathVariable(name = "clienteId") UUID clienteId,
-      @PathVariable(name = "referenciaId") UUID referenciaId
-  ) {
-    return ResponseEntity.ok(clienteService.updateReferenciasPersonales(clienteId, referenciaId));
+      @RequestBody UpdateReferenciaPersonal updateReferenciaPersonal
+      ) {
+    return ResponseEntity.ok(clienteService.updateReferenciasPersonales(clienteId, updateReferenciaPersonal));
   }
   
 }

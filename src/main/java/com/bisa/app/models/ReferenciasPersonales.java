@@ -21,5 +21,5 @@ public class ReferenciasPersonales {
   private Set<UUID> listReferenciaCliente;
   private Set<UUID> listReferenciaPersona;
   private int totalReferencias;
-  private int totalReferenciasClientes;
+  private int referenciasClientes;
 }
