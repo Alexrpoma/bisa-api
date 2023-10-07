@@ -1,5 +1,6 @@
 package com.bisa.app.validators;
 
+import com.bisa.app.exceptions.InvalidDataException;
 import com.bisa.app.models.Cliente;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ public class ClienteAgeValidator {
         LocalDate.now()
     ).getYears();
     if (age < 20) {
-      throw new RuntimeException("The client must be over 20 years old.");
+      throw new InvalidDataException("The client must be over 20 years old.");
     }
   }
 }

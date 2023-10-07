@@ -42,6 +42,21 @@ public class ApiExceptionHandler {
         .body(apiError);
   }
 
+  @ExceptionHandler(InvalidDataException.class)
+  public ResponseEntity<ApiError> handlerException(
+      InvalidDataException invalidDataException,
+      HttpServletRequest request
+  ) {
+    ApiError apiError = ApiError.builder()
+        .path(request.getRequestURI())
+        .message(invalidDataException.getMessage())
+        .statusCode(HttpStatus.BAD_REQUEST.value())
+        .localDateTime(getLocalDateTime())
+        .build();
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(apiError);
+  }
+
   private String getLocalDateTime() {
     return LocalDateTime.now()
         .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
