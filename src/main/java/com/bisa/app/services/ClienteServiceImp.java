@@ -71,6 +71,10 @@ public record ClienteServiceImp(
     if (cliente.getInformacionPersonal().getId().equals(referenciaId)) {
       throw new DuplicateResourceException("The Client %s can't be a reference of himself.".formatted(clienteId));
     }
+    if (cliente.getReferenciasPersonales().getListReferenciaCliente().contains(referenciaId)
+        || cliente.getReferenciasPersonales().getListReferenciaPersona().contains(referenciaId)) {
+      throw new DuplicateResourceException("The reference %s already exists.".formatted(referenciaId));
+    }
     boolean existsReferenciaCliente = clienteRepository.existsById(referenciaId);
     if (existsReferenciaCliente) {
       cliente.getReferenciasPersonales().getListReferenciaCliente().add(referenciaId);
@@ -78,7 +82,8 @@ public record ClienteServiceImp(
           cliente.getReferenciasPersonales().getListReferenciaCliente().size()
       );
       cliente.getReferenciasPersonales().setTotalReferencias(
-          cliente.getReferenciasPersonales().getTotalReferencias() + 1
+          cliente.getReferenciasPersonales().getListReferenciaCliente().size() +
+              cliente.getReferenciasPersonales().getListReferenciaPersona().size()
       );
       existsRefereciaId = true;
     }
@@ -86,10 +91,8 @@ public record ClienteServiceImp(
     if (existsReferenciaPersona) {
       cliente.getReferenciasPersonales().getListReferenciaPersona().add(referenciaId);
       cliente.getReferenciasPersonales().setTotalReferencias(
-          cliente.getReferenciasPersonales().getListReferenciaPersona().size()
-      );
-      cliente.getReferenciasPersonales().setTotalReferencias(
-          cliente.getReferenciasPersonales().getTotalReferencias() + 1
+          cliente.getReferenciasPersonales().getListReferenciaCliente().size() +
+              cliente.getReferenciasPersonales().getListReferenciaPersona().size()
       );
       existsRefereciaId = true;
     }
