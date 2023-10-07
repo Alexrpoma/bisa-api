@@ -58,10 +58,7 @@ public record ClienteServiceImp(
     UUID referenciaId = updateReferenciaPersonal.referenciaId();
     boolean existsRefereciaId = false;
     validateReferenciaId(clienteId, referenciaId, cliente);
-    if (cliente.getReferenciasPersonales().getListReferenciaCliente().contains(referenciaId)
-        || cliente.getReferenciasPersonales().getListReferenciaPersona().contains(referenciaId)) {
-      throw new DuplicateResourceException("The reference %s already exists.".formatted(referenciaId));
-    }
+    validateIfReferenciaNotDuplicated(cliente, referenciaId);
     boolean existsReferenciaCliente = clienteRepository.existsById(referenciaId);
     if (existsReferenciaCliente) {
       cliente.getReferenciasPersonales().getListReferenciaCliente().add(referenciaId);
@@ -89,21 +86,7 @@ public record ClienteServiceImp(
 
     cliente.setEstado(Estado.ACTIVO);
 
-    int totalReferencias = cliente.getReferenciasPersonales().getTotalReferencias();
-    int referenciasClientes = cliente.getReferenciasPersonales().getReferenciasClientes();
-
-    if (totalReferencias >= 2 && referenciasClientes >= 2 || totalReferencias >= 3 && referenciasClientes >= 1) {
-      cliente.setAccesibilidad(Accesibilidad.BUENA);
-    }
-    if (totalReferencias >= 2 && referenciasClientes == 0 || totalReferencias == 1 && referenciasClientes == 1) {
-      cliente.setAccesibilidad(Accesibilidad.REGULAR);
-    }
-    if (totalReferencias == 1 && referenciasClientes == 0) {
-      cliente.setAccesibilidad(Accesibilidad.MALA);
-    }
-    if (totalReferencias == 0 && referenciasClientes == 0) {
-      cliente.setAccesibilidad(Accesibilidad.NULA);
-    }
+    updateClienteAccessibility(cliente);
     return clienteRepository.save(cliente);
   }
 
@@ -113,10 +96,7 @@ public record ClienteServiceImp(
     Cliente cliente = getClient(clienteId);
     boolean existsRefereciaId = false;
     validateReferenciaId(clienteId, referenciaId, cliente);
-    if (!cliente.getReferenciasPersonales().getListReferenciaCliente().contains(referenciaId)
-        || !cliente.getReferenciasPersonales().getListReferenciaPersona().contains(referenciaId)) {
-      throw new DuplicateResourceException("The reference %s doesn't exist.".formatted(referenciaId));
-    }
+    validateIfReferenciaExists(cliente, referenciaId);
     boolean existsReferenciaCliente = clienteRepository.existsById(referenciaId);
     if (existsReferenciaCliente) {
       cliente.getReferenciasPersonales().getListReferenciaCliente().remove(referenciaId);
@@ -141,6 +121,11 @@ public record ClienteServiceImp(
       throw new NotFoundException("The reference %s doesn't exist.".formatted(referenciaId));
     }
 
+    updateClienteAccessibility(cliente);
+    clienteRepository.save(cliente);
+  }
+
+  private static void updateClienteAccessibility(Cliente cliente) {
     int totalReferencias = cliente.getReferenciasPersonales().getTotalReferencias();
     int referenciasClientes = cliente.getReferenciasPersonales().getReferenciasClientes();
 
@@ -159,7 +144,20 @@ public record ClienteServiceImp(
     if (totalReferencias == 0 && referenciasClientes == 0) {
       cliente.setEstado(Estado.BLOQUEADO);
     }
-    clienteRepository.save(cliente);
+  }
+
+  private static void validateIfReferenciaNotDuplicated(Cliente cliente, UUID referenciaId) {
+    if (cliente.getReferenciasPersonales().getListReferenciaCliente().contains(referenciaId)
+        || cliente.getReferenciasPersonales().getListReferenciaPersona().contains(referenciaId)) {
+      throw new DuplicateResourceException("The reference %s already exists.".formatted(referenciaId));
+    }
+  }
+
+  private static void validateIfReferenciaExists(Cliente cliente, UUID referenciaId) {
+    if (!cliente.getReferenciasPersonales().getListReferenciaCliente().contains(referenciaId)
+        && !cliente.getReferenciasPersonales().getListReferenciaPersona().contains(referenciaId)) {
+      throw new DuplicateResourceException("The reference %s doesn't exist.".formatted(referenciaId));
+    }
   }
 
   private static void initializeClienteReferences(Cliente cliente) {
