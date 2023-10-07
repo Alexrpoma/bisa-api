@@ -41,6 +41,8 @@ Este es un proyecto para la evaluacion de conocimientos en el desarrollo de soft
 - /api/v1/persona (GET) : Obtiene todas las personas registradas.
 - /api/v1/persona/{persona_id} (GET) : Obtiene una persona por su id.
 ### Ejemplo de registro de cliente:
+Cabe aclarar que ya existe clientes pre-registrados, por lo que se puede utilizar el id de un cliente ya registrado para agregar referencias
+y probar el funcionamiento del endpoint de agregar referencias.
 - URL: `http://localhost:8090/api/v1/cliente`
 - Metodo: `POST`
 - Body:
@@ -90,7 +92,7 @@ Este es un proyecto para la evaluacion de conocimientos en el desarrollo de soft
     "zona": "Miraflores",
     "barrio": "La fuente",
     "calle": "Av. 6 de Agosto",
-      "numeroDeDomicilio": 2045
+    "numeroDeDomicilio": 2045
   },
   "carnetDeIdentidad": 7058374
 }
@@ -205,3 +207,4 @@ Tambien podemos ver el estado y la accesisbilidad del cliente, que es calculada 
 - Cuando se consulta por la referencia de un cliente o persona por su id, se valida que la referencia exista.
 - Cuando se registra una referencia, se valida que el cliente no se este referenciando a si mismo.
 - Cuando se registra un cliente, se valida que su edad sea mayor a 20 anios.
+- Validacion de Ids de cliente o persona.

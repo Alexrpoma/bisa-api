@@ -1,10 +1,8 @@
 package com.bisa.app.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import static jakarta.persistence.GenerationType.AUTO;
@@ -12,6 +10,9 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cliente {
   @Id
   @GeneratedValue(strategy = AUTO)
