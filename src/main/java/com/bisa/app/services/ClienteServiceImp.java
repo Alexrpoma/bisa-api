@@ -1,5 +1,7 @@
 package com.bisa.app.services;
 
+import com.bisa.app.dtos.ClienteCreadoDTO;
+import com.bisa.app.dtos.ClienteCreatoDTOMapper;
 import com.bisa.app.dtos.ClientesAccesibilidadDTO;
 import com.bisa.app.dtos.ClientesAccesibilidadDTOMapper;
 import com.bisa.app.exceptions.DuplicateResourceException;
@@ -18,7 +20,8 @@ import java.util.UUID;
 public record ClienteServiceImp(
     ClienteRepository clienteRepository,
     PersonaRepository personaRepository,
-    ClientesAccesibilidadDTOMapper clientesAccesibilidadDTOMapper
+    ClientesAccesibilidadDTOMapper clientesAccesibilidadDTOMapper,
+    ClienteCreatoDTOMapper clienteCreatoDTOMapper
 ) implements ClienteService{
   @Override
   public List<Cliente> allClientes() {
@@ -39,7 +42,7 @@ public record ClienteServiceImp(
   }
 
   @Override
-  public Cliente createCliente(Cliente cliente) {
+  public ClienteCreadoDTO createCliente(Cliente cliente) {
     if(clienteRepository.existsClienteByEmail(cliente.getEmail())) {
       throw new DuplicateResourceException("The email %s is taken!.".formatted(cliente.getEmail()));
     }
@@ -54,7 +57,7 @@ public record ClienteServiceImp(
     );
     cliente.setEstado(Estado.BLOQUEADO);
     cliente.setAccesibilidad(Accesibilidad.NULA);
-    return clienteRepository.save(cliente);
+    return clienteCreatoDTOMapper.apply(clienteRepository.save(cliente));
   }
 
   @Override

@@ -1,5 +1,6 @@
 package com.bisa.app.services;
 
+import com.bisa.app.dtos.ClienteCreadoDTO;
 import com.bisa.app.dtos.ClientesAccesibilidadDTO;
 import com.bisa.app.models.Cliente;
 import com.bisa.app.models.UpdateReferenciaPersonal;
@@ -11,7 +12,7 @@ public interface ClienteService {
   List<Cliente> allClientes();
   List<ClientesAccesibilidadDTO> allClientesAccesibilidad();
   Cliente getCliente(UUID uuid);
-  Cliente createCliente(Cliente cliente);
+  ClienteCreadoDTO createCliente(Cliente cliente);
   Cliente updateReferenciasPersonales(UUID clienteId, UpdateReferenciaPersonal updateReferenciaPersonal);
   void deleteReferenciaPersonal(UUID clienteId, UpdateReferenciaPersonal updateReferenciaPersonal);
 }

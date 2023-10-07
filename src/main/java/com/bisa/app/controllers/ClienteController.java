@@ -1,5 +1,6 @@
 package com.bisa.app.controllers;
 
+import com.bisa.app.dtos.ClienteCreadoDTO;
 import com.bisa.app.dtos.ClientesAccesibilidadDTO;
 import com.bisa.app.models.Cliente;
 import com.bisa.app.models.UpdateReferenciaPersonal;
@@ -35,7 +36,7 @@ public class ClienteController {
   }
 
   @PostMapping
-  public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente) {
+  public ResponseEntity<ClienteCreadoDTO> createCliente(@RequestBody Cliente cliente) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(clienteService.createCliente(cliente));
   }
