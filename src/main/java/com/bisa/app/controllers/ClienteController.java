@@ -32,5 +32,13 @@ public class ClienteController {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(clienteService.createCliente(cliente));
   }
+
+  @PutMapping("/{clienteId}/referencia/{referenciaId}")
+  public ResponseEntity<Cliente> updateReferenciasPersonales(
+      @PathVariable(name = "clienteId") UUID clienteId,
+      @PathVariable(name = "referenciaId") UUID referenciaId
+  ) {
+    return ResponseEntity.ok(clienteService.updateReferenciasPersonales(clienteId, referenciaId));
+  }
   
 }

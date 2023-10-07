@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static jakarta.persistence.GenerationType.AUTO;
@@ -22,7 +23,11 @@ public class Cliente {
   private String email;
   private String telefono;
   private String ocupacion;
-  private int references;
+  @OneToOne(cascade = {CascadeType.ALL})
+  @JoinColumn(name = "referencias_personales_id", referencedColumnName = "id")
+  private ReferenciasPersonales referenciasPersonales;
   @Enumerated(EnumType.STRING)
   private Estado estado;
+  @Enumerated(EnumType.STRING)
+  private Accesibilidad accesibilidad;
 }

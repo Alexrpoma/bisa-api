@@ -9,4 +9,5 @@ public interface ClienteService {
   List<Cliente> allClientes();
   Cliente getCliente(UUID uuid);
   Cliente createCliente(Cliente cliente);
+  Cliente updateReferenciasPersonales(UUID clienteId, UUID referenciaId);
 }
