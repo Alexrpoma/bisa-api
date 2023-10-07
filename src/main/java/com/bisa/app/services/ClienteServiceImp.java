@@ -78,6 +78,9 @@ public record ClienteServiceImp(
       cliente.getReferenciasPersonales().setTotalReferencias(
           cliente.getReferenciasPersonales().getListReferenciaPersona().size()
       );
+      cliente.getReferenciasPersonales().setTotalReferencias(
+          cliente.getReferenciasPersonales().getTotalReferencias() + 1
+      );
       existsRefereciaId = true;
     }
     if (!existsRefereciaId) {
@@ -102,5 +105,64 @@ public record ClienteServiceImp(
       cliente.setAccesibilidad(Accesibilidad.NULA);
     }
     return clienteRepository.save(cliente);
+  }
+
+  @Override
+  public void deleteReferenciaPersonal(UUID clienteId, UpdateReferenciaPersonal updateReferenciaPersonal) {
+    UUID referenciaId = updateReferenciaPersonal.referenciaId();
+    boolean existsRefereciaId = false;
+    if (clienteId.equals(referenciaId)) {
+      throw new DuplicateResourceException("The Client %s can't be a reference of himself.".formatted(clienteId));
+    }
+    Cliente cliente = clienteRepository.findById(clienteId)
+        .orElseThrow(
+            () -> new NotFoundException("The Client %s doesn't exist.".formatted(clienteId))
+        );
+    if (cliente.getInformacionPersonal().getId().equals(referenciaId)) {
+      throw new DuplicateResourceException("The Client %s can't be a reference of himself.".formatted(clienteId));
+    }
+    boolean existsReferenciaCliente = clienteRepository.existsById(referenciaId);
+    if (existsReferenciaCliente && cliente.getReferenciasPersonales().getListReferenciaCliente().contains(referenciaId)) {
+      cliente.getReferenciasPersonales().getListReferenciaCliente().remove(referenciaId);
+      cliente.getReferenciasPersonales().setReferenciasClientes(
+          cliente.getReferenciasPersonales().getListReferenciaCliente().size()
+      );
+      cliente.getReferenciasPersonales().setTotalReferencias(
+          cliente.getReferenciasPersonales().getTotalReferencias() - 1
+      );
+      existsRefereciaId = true;
+    }
+    boolean existsReferenciaPersona = personaRepository.existsById(referenciaId);
+    if (existsReferenciaPersona && cliente.getReferenciasPersonales().getListReferenciaPersona().contains(referenciaId)) {
+      cliente.getReferenciasPersonales().getListReferenciaPersona().remove(referenciaId);
+      cliente.getReferenciasPersonales().setTotalReferencias(
+          cliente.getReferenciasPersonales().getTotalReferencias() - 1
+      );
+      existsRefereciaId = true;
+    }
+
+    if (!existsRefereciaId) {
+      throw new NotFoundException("The reference %s doesn't exist.".formatted(referenciaId));
+    }
+
+    int totalReferencias = cliente.getReferenciasPersonales().getTotalReferencias();
+    int referenciasClientes = cliente.getReferenciasPersonales().getReferenciasClientes();
+
+    if (totalReferencias >= 2 && referenciasClientes >= 2 || totalReferencias >= 3 && referenciasClientes >= 1) {
+      cliente.setAccesibilidad(Accesibilidad.BUENA);
+    }
+    if (totalReferencias >= 2 && referenciasClientes == 0 || totalReferencias == 1 && referenciasClientes == 1) {
+      cliente.setAccesibilidad(Accesibilidad.REGULAR);
+    }
+    if (totalReferencias == 1 && referenciasClientes == 0) {
+      cliente.setAccesibilidad(Accesibilidad.MALA);
+    }
+    if (totalReferencias == 0 && referenciasClientes == 0) {
+      cliente.setAccesibilidad(Accesibilidad.NULA);
+    }
+    if (totalReferencias == 0 && referenciasClientes == 0) {
+      cliente.setEstado(Estado.BLOQUEADO);
+    }
+    clienteRepository.save(cliente);
   }
 }

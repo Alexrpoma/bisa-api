@@ -41,5 +41,13 @@ public class ClienteController {
       ) {
     return ResponseEntity.ok(clienteService.updateReferenciasPersonales(clienteId, updateReferenciaPersonal));
   }
-  
+
+  @DeleteMapping("/{clienteId}/referencia")
+  public ResponseEntity<Void> deleteReferenciaPersonal(
+      @PathVariable(name = "clienteId") UUID clienteId,
+      @RequestBody UpdateReferenciaPersonal updateReferenciaPersonal
+      ) {
+    clienteService.deleteReferenciaPersonal(clienteId, updateReferenciaPersonal);
+    return ResponseEntity.noContent().build();
+  }
 }
