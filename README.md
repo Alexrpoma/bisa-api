@@ -96,7 +96,7 @@ Este es un proyecto para la evaluacion de conocimientos en el desarrollo de soft
 }
 ```
 ### Ejemplo de registro de referencias:
-Para agregar referencias a un cliente, se necesita el id de otro cliente o persona registrada, no se puede agregar referencias a un cliente que no este registrado.
+Para agregar referencias a un cliente, se necesita el referenceId de otro CLIENTE o PERSONA registrada, no se puede agregar referencias a un cliente que no este registrado.
 Tampoco un cliente puede referenciarse a si mismo, ya sea por su misma Id de cliente o por su Id de persona.
 Tampoco se puede agregar varias veces una misma referencia que ya este registrada.
 - URL: `http://localhost:8090/api/v1/cliente/db0aa3b2-c177-4c09-aafe-b3118b1be388/referencias`
@@ -104,7 +104,7 @@ Tampoco se puede agregar varias veces una misma referencia que ya este registrad
 - Body:
 ```json
 {
-    "referenciaId": "cbe9440f-0ab2-4c23-aecb-8c9ca3dd6b92" // Id de otro cliente o persona
+    "referenciaId": "cbe9440f-0ab2-4c23-aecb-8c9ca3dd6b92"
 }
 ```
 ### Ejemplo de eliminar referencias:
@@ -113,7 +113,7 @@ Tampoco se puede agregar varias veces una misma referencia que ya este registrad
 - Body:
 ```json
 {
-    "referenciaId": "cbe9440f-0ab2-4c23-aecb-8c9ca3dd6b92" // Id de otro cliente o persona
+    "referenciaId": "cbe9440f-0ab2-4c23-aecb-8c9ca3dd6b92"
 }
 ```
 ### Ejemplo de obtener lista de clientes por accesibilidad:
@@ -199,3 +199,9 @@ Tambien podemos ver el estado y la accesisbilidad del cliente, que es calculada 
     "accesibilidad": "BUENA"
 }
 ```
+### Manejo de excepciones:
+- Cuando se registra un cliente, se valida que el email no esten registrados en otro cliente.
+- Cuando se consulta un cliente por su id, se valida que el cliente exista.
+- Cuando se consulta por la referencia de un cliente o persona por su id, se valida que la referencia exista.
+- Cuando se registra una referencia, se valida que el cliente no se este referenciando a si mismo.
+- Cuando se registra un cliente, se valida que su edad sea mayor a 20 anios.
