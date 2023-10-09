@@ -31,6 +31,10 @@ Este es un proyecto para la evaluacion de conocimientos en el desarrollo de soft
   - JDBC URL: `jdbc:h2:mem:db`
   - User Name: `admin`
   - Password: `adm-bisa`
+### Docker:
+Para ejecutar el proyecto con docker, es necesario tener instalado docker.
+- Abrir la carpeta donde se haya clonado el repositorio.
+- Abrir una terminal y ejecutar el siguiente comando: `docker-compose up`
 ### endpoints:
 - /api/v1/cliente (GET) : Obtiene todos los clientes registrados por accesibilidad.
 - /api/v1/cliente/detalle (GET) : Obtiene todos los clientes registrados a detalle.
