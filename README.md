@@ -11,6 +11,7 @@ Este es un proyecto para la evaluacion de conocimientos en el desarrollo de soft
 - H2 Database
 - Lombok
 - Swagger
+- Docker
 ### Descripcion breve sobre las tecnologias utilizadas:
 - Java 17: Es un lenguaje de programacion orientado a objetos, de proposito general, concurrente, basado en clases, que fue disenado especificamente para tener tan pocas dependencias de implementacion como fuera posible.
 - Maven 3.9.2: Es una herramienta de software para la gestion y construccion de proyectos Java creada por Jason van Zyl, de Sonatype, en 2002. Se basa en el concepto de un modelo de objeto de proyecto (POM), que describe la construccion de un proyecto en terminos de dependencias y de un conjunto de plugins y objetivos asociados a ellos.
