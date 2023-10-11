@@ -21,6 +21,7 @@ Este es un proyecto para la evaluacion de conocimientos en el desarrollo de soft
 - H2 Database: Es un sistema de gestion de base de datos relacional escrito en Java. Puede ser envebido en aplicaciones Java o ejecutarse en el modo de servidor.
 - Lombok: Es una biblioteca Java que se conecta automaticamente a su editor y herramientas de compilacion, insertando codigo generado, como metodos getter / setter, constructores, etc.
 - Swagger: Es un framework de codigo abierto respaldado por un gran ecosistema de herramientas que ayuda a los desarrolladores a disenar, crear, documentar y consumir servicios web RESTful.
+- Docker: Con esta tecnologia se puede empaquetar una aplicacion o servicio con todas sus dependencias en un contenedor virtual, que podra ser ejecutado en cualquier servidor con docker instalado.
 ### Instalacion:
 - Clonar el repositorio: `git clone https://github.com/Alexrpoma/bisa-api.git`
 - Abrir el proyecto en un IDE de su preferencia.
