@@ -9,3 +9,9 @@ services:
     image: bisa-api:1.0.0
     ports:
       - "8090:8090"
+    networks:
+      - bisa-network
+
+networks:
+    bisa-network:
+        driver: bridge
