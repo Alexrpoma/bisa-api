@@ -7,6 +7,7 @@ import com.bisa.app.dtos.ClientesAccesibilidadDTOMapper;
 import com.bisa.app.exceptions.DuplicateResourceException;
 import com.bisa.app.exceptions.NotFoundException;
 import com.bisa.app.models.*;
+import com.bisa.app.repositories.ClientAccessibilityRepository;
 import com.bisa.app.repositories.ClienteRepository;
 import com.bisa.app.repositories.PersonaRepository;
 import com.bisa.app.validators.ClienteAgeValidator;
@@ -20,6 +21,7 @@ import java.util.UUID;
 public record ClienteServiceImp(
     ClienteRepository clienteRepository,
     PersonaRepository personaRepository,
+    ClientAccessibilityRepository clientAccessibilityRepository,
     ClientesAccesibilidadDTOMapper clientesAccesibilidadDTOMapper,
     ClienteCreatoDTOMapper clienteCreatoDTOMapper
 ) implements ClienteService{
@@ -38,6 +40,18 @@ public record ClienteServiceImp(
   @Override
   public Cliente getCliente(UUID uuid) {
     return getClient(uuid);
+  }
+
+  @Override
+  public List<ClienteCreadoDTO> getClientesByAccesibilidad(String accesibilidad) {
+    try {
+      Accesibilidad accesibilidadEnum = Accesibilidad.valueOf(accesibilidad);
+      return clientAccessibilityRepository.findAllByAccesibilidad(accesibilidadEnum).stream()
+        .map(clienteCreatoDTOMapper)
+        .toList();
+    } catch (IllegalArgumentException e) {
+      throw new NotFoundException("The accesibilidad %s doesn't exist.".formatted(accesibilidad));
+    }
   }
 
   @Override

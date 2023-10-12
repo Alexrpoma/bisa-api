@@ -36,6 +36,12 @@ public class ClienteController {
     return ResponseEntity.ok(clienteService.getCliente(idValidator.apply(id)));
   }
 
+  @GetMapping("/accesibilidad/{accesibilidad}")
+  public ResponseEntity<List<ClienteCreadoDTO>> getClientesByAccesibilidad(
+      @PathVariable(name = "accesibilidad") String accesibilidad) {
+    return ResponseEntity.ok(clienteService.getClientesByAccesibilidad(accesibilidad));
+  }
+
   @PostMapping
   public ResponseEntity<ClienteCreadoDTO> createCliente(@RequestBody Cliente cliente) {
     return ResponseEntity.status(HttpStatus.CREATED)
