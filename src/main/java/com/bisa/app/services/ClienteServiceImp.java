@@ -45,7 +45,7 @@ public record ClienteServiceImp(
   @Override
   public List<ClienteCreadoDTO> getClientesByAccesibilidad(String accesibilidad) {
     try {
-      Accesibilidad accesibilidadEnum = Accesibilidad.valueOf(accesibilidad);
+      Accesibilidad accesibilidadEnum = Accesibilidad.valueOf(accesibilidad.toUpperCase());
       return clientAccessibilityRepository.findAllByAccesibilidad(accesibilidadEnum).stream()
         .map(clienteCreatoDTOMapper)
         .toList();
