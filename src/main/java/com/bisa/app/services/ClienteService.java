@@ -12,6 +12,7 @@ public interface ClienteService {
   List<Cliente> allClientes();
   List<ClientesAccesibilidadDTO> allClientesAccesibilidad();
   Cliente getCliente(UUID uuid);
+  List<ClienteCreadoDTO> getClientesByAccesibilidad(String accesibilidad);
   ClienteCreadoDTO createCliente(Cliente cliente);
   Cliente updateReferenciasPersonales(UUID clienteId, UpdateReferenciaPersonal updateReferenciaPersonal);
   void deleteReferenciaPersonal(UUID clienteId, UpdateReferenciaPersonal updateReferenciaPersonal);
