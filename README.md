@@ -11,6 +11,7 @@ Este es un proyecto para la evaluacion de conocimientos en el desarrollo de soft
 - H2 Database
 - Lombok
 - Swagger
+- Docker
 ### Descripcion breve sobre las tecnologias utilizadas:
 - Java 17: Es un lenguaje de programacion orientado a objetos, de proposito general, concurrente, basado en clases, que fue disenado especificamente para tener tan pocas dependencias de implementacion como fuera posible.
 - Maven 3.9.2: Es una herramienta de software para la gestion y construccion de proyectos Java creada por Jason van Zyl, de Sonatype, en 2002. Se basa en el concepto de un modelo de objeto de proyecto (POM), que describe la construccion de un proyecto en terminos de dependencias y de un conjunto de plugins y objetivos asociados a ellos.
@@ -20,6 +21,7 @@ Este es un proyecto para la evaluacion de conocimientos en el desarrollo de soft
 - H2 Database: Es un sistema de gestion de base de datos relacional escrito en Java. Puede ser envebido en aplicaciones Java o ejecutarse en el modo de servidor.
 - Lombok: Es una biblioteca Java que se conecta automaticamente a su editor y herramientas de compilacion, insertando codigo generado, como metodos getter / setter, constructores, etc.
 - Swagger: Es un framework de codigo abierto respaldado por un gran ecosistema de herramientas que ayuda a los desarrolladores a disenar, crear, documentar y consumir servicios web RESTful.
+- Docker: Con esta tecnologia se puede empaquetar una aplicacion o servicio con todas sus dependencias en un contenedor virtual, que podra ser ejecutado en cualquier servidor con docker instalado.
 ### Instalacion:
 - Clonar el repositorio: `git clone https://github.com/Alexrpoma/bisa-api.git`
 - Abrir el proyecto en un IDE de su preferencia.
@@ -31,6 +33,10 @@ Este es un proyecto para la evaluacion de conocimientos en el desarrollo de soft
   - JDBC URL: `jdbc:h2:mem:db`
   - User Name: `admin`
   - Password: `adm-bisa`
+### Docker:
+Para ejecutar el proyecto con docker, es necesario tener instalado docker.
+- Abrir la carpeta donde se haya clonado el repositorio.
+- Abrir una terminal y ejecutar el siguiente comando: `docker-compose up`
 ### endpoints:
 - /api/v1/cliente (GET) : Obtiene todos los clientes registrados por accesibilidad.
 - /api/v1/cliente/detalle (GET) : Obtiene todos los clientes registrados a detalle.

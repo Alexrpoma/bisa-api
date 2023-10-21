@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  api:
+    container_name: api-rest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bisa-api:1.0.0
+    ports:
+      - "8090:8090"
+    networks:
+      - bisa-network
+
+networks:
+    bisa-network:
+        driver: bridge
